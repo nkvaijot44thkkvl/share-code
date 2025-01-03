@@ -19,6 +19,7 @@ public class Data_01 {
 			 squareRoot = Math.sqrt(i);
 
        //自然数判定　約数が2/3/5/7の時は素数ではないとする
+	//参考元URL：https://math-jp.net/2017/03/10/how-to-find-a-prime-number/
 			 if(squareRoot % 2 == 0) {
 				 natural = false;
 			 }else if(squareRoot % 3 == 0) {
