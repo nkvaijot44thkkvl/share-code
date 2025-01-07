@@ -3,9 +3,13 @@ package kadai_015;
 public class CarExec_Chapter15 {
 
 	public static void main(String[] args) {
-		
-		
+		let gear = 3;
+		Car_Chapter15 car = new Car_Chapter15(1,10);
+		let gearOld = car.gear
 
+		Car_Chapter15.gearChange(gear);
+		System.out.println("ギア" + gearOld +"から"+gear+"に切り替えました");
+		Car_Chapter15.run();
 	}
 
 }
