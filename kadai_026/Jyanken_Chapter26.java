@@ -27,7 +27,14 @@ public class Jyanken_Chapter26 {
 	}
 
   public String getRandom(String deme) {
-
+                //対戦相手のじゃんけんがランダムで選ばれる
+                String aite;
+                int deme = Math.random()*3;
+                deme = deme * 10;
+                swtch(deme) {
+                case 1 -> aite = "r";
+                case 2 -> aite = "p";
+                else -> aite = "s";
 	}
 
 	public String getMyChoice(){
