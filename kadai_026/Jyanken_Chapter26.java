@@ -38,6 +38,9 @@ public class Jyanken_Chapter26 {
 	}
 
 	public String getMyChoice(){
+                Scanner fuga = new Scanner(System.in);
+                fuga.next();
+                fuga.close();
 
 	} 
 }
