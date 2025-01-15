@@ -20,4 +20,12 @@ public class Jyanken_Chapter26 {
 		case "p" -> {}
 		}
 	}
+
+  public void getRandom(String deme) {
+
+	}
+
+	public void getMyChoice(){
+
+	} 
 }
