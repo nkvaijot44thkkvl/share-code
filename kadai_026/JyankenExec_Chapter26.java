@@ -21,7 +21,7 @@ public class JyankenExec_Chapter26 {
 		else -> aite = "s";
 		
 		//じゃんけんの結果を出力する
-		
+		hoge.playGame(aite);
 
 	}
 
