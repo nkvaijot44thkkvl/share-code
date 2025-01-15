@@ -12,13 +12,7 @@ public class JyankenExec_Chapter26 {
 		fuga.close();
 
 		//対戦相手のじゃんけんがランダムで選ばれる
-		String aite;
-		int deme = Math.random()*3;
-		deme = deme * 10;
-		swtch(deme) {
-		case 1 -> aite = "r";
-		case 2 -> aite = "p";
-		else -> aite = "s";
+		hoge.getRandom();
 		
 		//じゃんけんの結果を出力する
 		hoge.playGame(aite);
