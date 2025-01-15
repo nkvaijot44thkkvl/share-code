@@ -21,11 +21,11 @@ public class Jyanken_Chapter26 {
 		}
 	}
 
-  public void getRandom(String deme) {
+  public String getRandom(String deme) {
 
 	}
 
-	public void getMyChoice(){
+	public String getMyChoice(){
 
 	} 
 }
