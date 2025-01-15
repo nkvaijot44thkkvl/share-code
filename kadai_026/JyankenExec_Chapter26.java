@@ -7,9 +7,7 @@ public class JyankenExec_Chapter26 {
 		Jyanken_Chapter26 hoge = new Jyanken_Chapter26();
 
 		//自分のじゃんけんの手を入力
-		Scanner fuga = new Scanner(System.in);
-		fuga.next();
-		fuga.close();
+		hoge.getMyChoice();
 
 		//対戦相手のじゃんけんがランダムで選ばれる
 		hoge.getRandom();
