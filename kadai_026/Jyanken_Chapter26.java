@@ -13,9 +13,11 @@ public class Jyanken_Chapter26 {
 	
 	public void playGame(String deme) {
 		switch (deme) {
-		case "" -> {}
-		case "" -> {}
-		case "" -> {}
+		case "r" -> {
+										
+									}
+		case "s" -> {}
+		case "p" -> {}
 		}
 	}
 }
