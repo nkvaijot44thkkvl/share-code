@@ -1,0 +1,26 @@
+inport java.sql.DriverManager;
+inport java.sql.Connection;
+inport java.sql.SQLException;
+
+//ここはクラスを作って組み込むmainメソッド
+try {
+//データベースに接続
+Connection con = DriverManager.getConnection(
+"jdbc:mysql://localhost/java_db",
+"root",
+"【パスワード】"
+);
+
+System.out.println("データベース接続成功");
+System.out.println(con);
+
+//データベース接続を解除
+con.close();
+
+} catch(SQLException e) {
+System.out.println("データベース接続失敗:" + e.getMessage());
+}
+
+CREATE SCHEMA 'データベース名';
+CREATE DATABASE 'データベース名';
+
