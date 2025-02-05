@@ -1,0 +1,20 @@
+package com.example.springkadaiform.controller;
+
+import org.springframework.stereotype.Controller;
+import org.springframework.web.bind.annotation.GetMapping;
+
+@Controller
+public class ContactFormController {
+	
+	//フォーム・確認画面への各リクエストに応じて、適切なビューを表示
+	@GetMapping("/login")
+	//バリデーション結果に応じて、表示内容を切り替える必要がある。
+	
+	//バリデーションOK：確認画面を表示
+	public String login() {
+		//ログイン画面のビューを表示
+		return "auth/login";
+	}
+	//バリデーションNG：元のフォームへリダイレクト
+	
+}
