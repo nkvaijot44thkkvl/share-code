@@ -17,4 +17,25 @@ public class ContactFormController {
 	}
 	//バリデーションNG：元のフォームへリダイレクト
 	
+	@PostMapping("/register")
+	public String registerUser(RedirectAttributes redirectAttributes,
+43            UserRegisterForm form) {
+47
+48        try {
+49            // リクエストパラメータからのデータを用いてユーザー登録
+50            userService.createUser(form.getUserName(), form.getPassword(), form.getRoleId());
+52
+53            // 登録成功時は完了メッセージをビューに受け渡す
+54            redirectAttributes.addFlashAttribute("successMessage", "ユーザー登録が完了しました。");
+55
+56        } catch (IllegalArgumentException e) {
+57            // 登録失敗時はエラーメッセージをビューに受け渡す
+58            redirectAttributes.addFlashAttribute("failureMessage", e.getMessage());
+59
+60            // フォームクラスをビューに受け渡す
+61            redirectAttributes.addFlashAttribute("userRegisterForm", form);
+65        }
+return "redirect:/adminuser";
+69    }
+70}
 }
