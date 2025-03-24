@@ -21,12 +21,12 @@ public class ReviewService {
     }
     
     //指定したIDを持つレビューを取得する
-    public Page<Review> findReviewById(){
+    public Optional<Review> findReviewById(Integer id){
     	return reviewRepository.findByHouseAndUser(Integer id);
     }
     
     //指定した民宿のレビューを作成日時が新しい順に6件取得する
-	public Page<Review> findTop6ReviewsByHouseOrderByCreatedAtDesc(){
+	public List<Review> findTop6ReviewsByHouseOrderByCreatedAtDesc(){
 		 return reviewRepository.findTop6ByHouseOrderByCreatedAtDesc();
 	}
 	
@@ -48,11 +48,16 @@ public class ReviewService {
 	//レビュー投稿ページ用のフォームクラスからのデータをもとに、新しいレビューを登録する
 	public Page<Review> createReview(ReviewRepository reviewRepository){
         Review review = new Review();
+        User user = new user();
+        Hause hause = new hause();
+
+        user.setName(userRepository.getUserName());
+
 
         review.setScore(reviewRepository.getScore());
         review.setContent(reviewRepository.getContent());
         
-        reviewRepository.save(review);
+        return reviewRepository.save(review);
 	}
 	
 	//レビュー編集ページ用のフォームクラスからのデータをもとに、既存のレビューを更新する
