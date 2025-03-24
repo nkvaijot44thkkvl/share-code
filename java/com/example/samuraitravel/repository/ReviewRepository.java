@@ -8,8 +8,8 @@ import com.example.samuraitravel.entity.House;
 import com.example.samuraitravel.entity.Review;
 
 public interface ReviewRepository extends JpaRepository<Review, Integer> {
-	public Page<Review> findTop6ByHouseOrderByCreatedAtDesc(House house, Pageable pageable);
-	public Page<Review> findByHouseAndUser(House house, Pageable pageable);
-	public Page<Review> countByHouse(House house);
-	public Page<Review> findByHouseOrderByCreatedAtDesc(House house);
+	public Review findTop6ByHouseOrderByCreatedAtDesc(Integer house_id);
+	public Review findByHouseAndUser(Integer house_id,Integer user_id);
+    public Review countByHouse(Integer house_id);
+	public Review findByHouseOrderByCreatedAtDesc(Integer house_id);
 }
