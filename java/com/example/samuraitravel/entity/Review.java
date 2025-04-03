@@ -32,7 +32,7 @@ public class Review {
     @Column(name = "score")
     private Integer score;
 
-    @Column(name = "checkout_date")
+    @Column(name = "content") //chackout_dateがコピペしてきたときから残っていた。認証エラーでSQLが失敗してログイン画面へ遷移
     private String content;
 
     @Column(name = "created_at", insertable = false, updatable = false)
