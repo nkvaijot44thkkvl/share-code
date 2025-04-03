@@ -44,12 +44,13 @@ public class ReviewService {
 		 //return reviewRepository.findTop6ByHouseOrderByCreatedAtDesc(house_id);
 		 
 		 // Houseエンティティを取得
-		    Optional<House> house = houseRepository.findById(house_id);
+		    Optional<House> optionalHouse = houseRepository.findById(house_id);
 		    
 		    // Houseが存在する場合
-		    if (house.isPresent()) {
+		    if (optionalHouse.isPresent()) {
 		        // Houseオブジェクトを渡してレビューを取得
-		        return reviewRepository.findTop6ByHouseOrderByCreatedAtDesc(house.get());
+		    	House house = optionalHouse.get();
+		        return reviewRepository.findTop6ByHouseOrderByCreatedAtDesc(house);
 		    }
 		    
 		    // Houseが見つからない場合、空のリストを返す
@@ -57,35 +58,29 @@ public class ReviewService {
 	}
 	
 	//指定した民宿とユーザーのレビューを取得する
-	public Optional<Review> findReviewByHouseAndUser(Integer house_id,Integer user_id){
-		
-		Optional<House> house = houseRepository.findById(house_id);
-		Optional<User> user = userRepository.findById(user_id);
-		
-		if (house.isPresent() && user.isPresent()) {
-			Optional<Review> review = reviewRepository.findByHouseAndUser(house.get(), user.get());
-	        
-	        
-	        
-	        if (review == null) {
-	            throw new EntityNotFoundException("レビューが見つかりません。");
-	        }
-	        
-	        return review;
-	    }
-	    
-	    throw new EntityNotFoundException("民宿またはユーザーが見つかりません。");
+	public Optional<Review> findReviewByHouseAndUser(Integer house_id) {
+		 // 1. ログインユーザーを取得
+        String email = SecurityContextHolder.getContext().getAuthentication().getName();
+        User user = userRepository.findByEmail(email);
+        if (user == null) {
+            throw new EntityNotFoundException("ログインユーザーが見つかりません;findReviewByHouseAndUser");
+        }
+        
+       Optional <House> optionalHouse = houseRepository.findById(house_id);
+       House house = optionalHouse.get();
+		return reviewRepository.findByHouseAndUser(house,user);
 	}
-	
+
 	//指定した民宿のレビュー件数を取得する
 	public long countReviewsByHouse(Integer house_id){
 		//countReviewsByHouseに渡された引数IDに一致するHouseエンティティを取得		
-		Optional<House> house = houseRepository.findById(house_id);
+		Optional<House> optionalHouse = houseRepository.findById(house_id);
 		
 		 // 一致するHouseが存在する場合
-	    if (house.isPresent()) {
+	    if (optionalHouse.isPresent()) {
 	        // Houseオブジェクトを渡してレビュー件数を取得
-	        return reviewRepository.countByHouse(house.get());
+	    	House house = optionalHouse.get();
+	        return reviewRepository.countByHouse(house);
 	    }
 	    
 	    // Houseが見つからない場合、0
@@ -94,7 +89,11 @@ public class ReviewService {
 	
 	//指定した民宿のすべてのレビューを作成日時が新しい順に並べ替え、ページングされた状態で取得する
 	public Page<Review> findReviewsByHouseOrderByCreatedAtDesc(Integer house_id, Pageable pageable){
+		System.out.println("house_id " + house_id);
 		Optional<House> house = houseRepository.findById(house_id);
+		if (house.isEmpty()) {
+	        System.out.println("Houseオブジェクトが空。");// Houseが存在しない場合、空のページを返す
+	    }
 		// Houseオブジェクトを渡してレビュー件数を取得
 	    return reviewRepository.findByHouseOrderByCreatedAtDesc(house.get(),pageable);
 	   
@@ -102,20 +101,16 @@ public class ReviewService {
 	
 	//レビュー投稿ページ用のフォームクラスからのデータをもとに、新しいレビューを登録する
 	@Transactional
-	public Review createReview(Integer house_id,ReviewRepository reviewRepository,ReviewRegisterForm reviewRegisterForm){
+	public Review createReview(Integer house_id,ReviewRegisterForm reviewRegisterForm){
         Review review = new Review();
         // 1. ログインユーザーを取得
         String email = SecurityContextHolder.getContext().getAuthentication().getName();
         User user = userRepository.findByEmail(email);
-        if (user == null) {
-            throw new EntityNotFoundException("ログインユーザーが見つかりません");
-        }
-        
-        Optional<House> house = houseRepository.findById(house_id);
-        if (house.isPresent()) {        	
-	        review.setHouse(house.get());
-	    }
+        Optional <House> optionalHouse = houseRepository.findById(house_id);
+        House house = optionalHouse.get();
+
         review.setUser(user);
+        review.setHouse(house);
         review.setScore(reviewRegisterForm.getScore());
         review.setContent(reviewRegisterForm.getContent());
         
@@ -124,24 +119,18 @@ public class ReviewService {
 	
 	//レビュー編集ページ用のフォームクラスからのデータをもとに、既存のレビューを更新する
 	@Transactional
-	public Review updateReview(Review review , ReviewEditForm reviewEditForm){
-		/*review.setHouse(reviewEditForm.getHouseId());
-		review.setUser(reviewEditForm.getFuhouserigana());
-		review.setScore(reviewEditForm.getPostalCode());
-		review.setContent(reviewEditForm.getAddress());
-		
-	    userRepository.save(review);*/
-	    
-	    // 1. 編集対象のレビューを取得
-	    /*Review review = reviewRepository.findById(reviewId)
-	            .orElseThrow(() -> new EntityNotFoundException("レビューが見つかりません"));
+	public Review updateReview(Integer house_id, ReviewEditForm reviewEditForm){
+		  Review review = new Review();
+	        // 1. ログインユーザーを取得
+	        String email = SecurityContextHolder.getContext().getAuthentication().getName();
+	        User user = userRepository.findByEmail(email);
+	        Optional <House> optionalHouse = houseRepository.findById(house_id);
+	        House house = optionalHouse.get();
 
-	    // 2. ログインユーザーが投稿者かどうかチェック
-	    String email = SecurityContextHolder.getContext().getAuthentication().getName();
-	    if (!review.getUser().getEmail().equals(email)) {
-	        throw new AccessDeniedException("このレビューを編集する権限がありません");
-	    }*/
-
+	        review.setUser(user);
+	        review.setHouse(house);
+	        review.setScore(reviewEditForm.getScore());
+	        review.setContent(reviewEditForm.getContent());
 	    // 3. レビューの内容を更新
 	    review.setScore(reviewEditForm.getScore());
 	    review.setContent(reviewEditForm.getContent());
@@ -156,8 +145,17 @@ public class ReviewService {
 	}
 	
 	//指定したユーザーが、指定した民宿のレビューをすでに投稿済みかどうかをチェックする
-	public boolean hasUserAlreadyReviewed(House house, User user){
-		 return reviewRepository.findByHouseAndUser(house, user).isPresent();
+	public boolean hasUserAlreadyReviewed(Integer house_id){
+		 // 1. ログインユーザーを取得
+        String email = SecurityContextHolder.getContext().getAuthentication().getName();
+        User user = userRepository.findByEmail(email);
+        if (user == null) {
+            throw new EntityNotFoundException("ログインユーザーが見つかりません:hasUserAlreadyReviewed");
+        }
+        
+        Optional <House> optionalHouse = houseRepository.findById(house_id);
+        House house = optionalHouse.get();
+		return reviewRepository.findByHouseAndUser(house, user).isPresent();
 	}
     
 }
